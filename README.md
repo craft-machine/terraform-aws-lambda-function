@@ -34,6 +34,7 @@ No requirements.
 | function\_errors\_alarm\_threshold | n/a | `string` | `"1"` | no |
 | function\_errors\_datapoints | n/a | `string` | `"2"` | no |
 | function\_errors\_evaluation\_periods | n/a | `string` | `"2"` | no |
+| function\_source\_dir | The path to the function's source dir. If not defined, ../functions/${var.name} folder will be used. | `string` | `""` | no |
 | handler\_name | The function entrypoint in your code. Default lambda\_function.lambda\_function. | `string` | `""` | no |
 | http\_method | The HTTP method (GET, POST, PUT, DELETE, HEAD, OPTION, ANY) when calling the associated lambda. Is used only if path specified. | `string` | `""` | no |
 | iterator\_age\_alarm\_threshold | n/a | `string` | `"1200000"` | no |

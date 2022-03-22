@@ -1,5 +1,5 @@
 locals {
-  source_dir          = "../functions/${var.name}"
+  source_dir          = length(var.function_source_dir) == 0 ? "../functions/${var.name}" : var.function_source_dir
   function_source_dir = "${local.source_dir}/function"
   function_source_zip = "${local.source_dir}/lambda_function.zip"
 }

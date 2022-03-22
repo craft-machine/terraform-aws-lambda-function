@@ -22,6 +22,11 @@ variable "package" {
   default     = ""
 }
 
+variable "function_source_dir" {
+  description = "The path to the function's source dir. If not defined, ../functions/$${var.name} folder will be used."
+  default     = ""
+}
+
 variable "environment" {
   description = "The Lambda environment's configuration settings. Adds kinesis_stream_name, sns_stream_name."
   type        = map(string)
