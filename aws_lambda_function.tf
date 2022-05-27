@@ -45,11 +45,11 @@ resource "aws_lambda_function" "aws_lambda_function" {
 resource "aws_lambda_function" "aws_lambda_function_with_vpc" {
   count = var.vpc_enabled ? 1 : 0
 
-  filename         = var.ecr_enabled ? null : local.filename 
-  source_code_hash = var.ecr_enabled ? null : local.source_code_hash
-
   image_uri    = var.ecr_enabled ? var.image_uri : null
   image_config = var.ecr_enabled ? var.image_config : null
+
+  filename         = var.ecr_enabled ? null : local.filename 
+  source_code_hash = var.ecr_enabled ? null : local.source_code_hash
 
   function_name = var.name
 
