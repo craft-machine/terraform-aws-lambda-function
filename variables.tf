@@ -79,6 +79,24 @@ variable "layers" {
   default     = []
 }
 
+variable "ecr_enabled" {
+  description = "Shows if lambda function runs on custom docker container"
+  type        = bool
+  default     = false
+}
+
+variable "image_uri" {
+  description = "ECR image URI containing the function's deployment package."
+  type        = string
+  default     = ""
+}
+
+variable "image_config" {
+  description = "Container image configuration values that override the values in the container image Dockerfile."
+  type        = map(string)
+  default     = {}
+}
+
 # CLOUDWATCH ###################################################################
 
 variable "schedule_expression_enabled" {
