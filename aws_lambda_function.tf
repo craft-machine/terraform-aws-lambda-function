@@ -8,7 +8,7 @@ locals {
 }
 
 resource "aws_lambda_function" "aws_lambda_function" {
-  count = var.vpc_enabled ? 0 : 1
+  count = !var.vpc_enabled && !var.ecr_enabled ? 1 : 0
 
   filename         = local.filename
   source_code_hash = local.source_code_hash
@@ -43,10 +43,7 @@ resource "aws_lambda_function" "aws_lambda_function" {
 }
 
 resource "aws_lambda_function" "aws_lambda_function_with_vpc" {
-  count = var.vpc_enabled ? 1 : 0
-
-  image_uri    = var.ecr_enabled ? var.image_uri : null
-  image_config = var.ecr_enabled ? var.image_config : null
+  count = var.vpc_enabled && !var.ecr_enabled ? 1 : 0
 
   filename         = var.ecr_enabled ? null : local.filename 
   source_code_hash = var.ecr_enabled ? null : local.source_code_hash
@@ -85,4 +82,43 @@ resource "aws_lambda_function" "aws_lambda_function_with_vpc" {
   }
 
   layers = var.layers
+}
+
+resource "aws_lambda_function" "aws_lambda_function_with_vpc_and_ecr" {
+  count = var.vpc_enabled && var.ecr_enabled ? 1 : 0
+
+  image_uri    = var.ecr_enabled ? var.image_uri : null
+  image_config = var.ecr_enabled ? var.image_config : null
+
+  function_name = var.name
+
+  memory_size = var.memory_size
+
+  role    = aws_iam_role.iam_for_function.arn
+
+  reserved_concurrent_executions = var.concurrency
+
+  tracing_config {
+    mode = "PassThrough"
+  }
+
+  timeout = var.timeout
+  runtime = var.runtime
+  tags    = var.tags
+
+  vpc_config {
+    subnet_ids         = var.vpc_subnet_ids
+    security_group_ids = var.vpc_security_group_ids
+  }
+
+  environment {
+    variables = merge(
+      var.environment,
+      local.kinesis_stream_name_env,
+      local.sns_stream_name_env,
+      local.sqs_stream_id_env,
+      tomap({"kinesis_event_source_arn": var.kinesis_event_source_arn}),
+      tomap({"sns_event_source_arn": var.sns_event_source_arn})
+    )
+  }
 }
